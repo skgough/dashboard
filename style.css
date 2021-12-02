@@ -56,8 +56,14 @@ body > * {
 }
 .weather .now {
     grid-area: now;
+}
+.weather .now .temp {
     font: 3rem/1 Inter;
     font-variation-settings: 'wght' 750;
+}
+.weather .now .status {
+    font: 1.25rem/1 Inter;
+    font-variation-settings: 'wght' 400;
 }
 .weather .sunrise,
 .weather .sunset {

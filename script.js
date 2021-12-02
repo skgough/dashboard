@@ -71,8 +71,10 @@ async function getNOAAData(location) {
     linkedData.station.latest = await getResource(linkedData.station.name + '/observations/latest')
     
     console.log(linkedData)
-    const weatherDisplay = document.querySelector('.weather .now')
-    weatherDisplay.innerText = celToFahr(linkedData.station.latest.properties.temperature.value) + '°F'
+    const tempDisplay = document.querySelector('.weather .now .temp')
+    tempDisplay.innerText = celToFahr(linkedData.station.latest.properties.temperature.value) + '°F'
+    const statusDisplay = document.querySelector('.weather .now .status')
+    statusDisplay.innerText = linkedData.station.latest.properties.textDescription
 }
 async function getResource(link) {
     const request = await fetch(link)
