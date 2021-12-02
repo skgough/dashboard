@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Dashboard</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <script defer src="script.js"></script>
+</head>
+
+<body>
+    <div class='clock'>
+        <div class='time'></div>
+        <div class='date'></div>
+    </div>
+    <button class='weather'>
+        <div class='now'></div>
+        <div class='sunrise'>
+            <img src='assets/weather/wi-sunrise.svg'>
+            <span></span>
+        </div>
+        <div class='sunset'>
+            <img src='assets/weather/wi-sunset.svg'>
+            <span></span>
+        </div>
+    </button>
+    <button class='wifi'>
+        <img src='assets/wifi.svg'>WiFi
+    </button>
+    <div class='overlays'>
+        <div class='wifi-overlay'>
+            <div>
+                <div>Scan</div>
+                <img src='assets/qr.png'>
+            </div>
+            <button class='close'></button>
+        </div>
+    </div>
+</body>
+
+</html>

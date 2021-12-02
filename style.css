@@ -1,0 +1,145 @@
+@import url('assets/fonts/fonts.css');
+body {
+    user-select: none;
+    cursor: none;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background: darkslateblue;
+    color: white;
+    --text-color: white;
+}
+body > * {
+    position: absolute;
+}
+/* * {
+    outline: 1px solid black;
+} */
+
+.clock {
+    top: 1rem;
+    left: 1.5rem;
+    text-align: right;
+    padding: 0 0 .35rem 0;
+    border-bottom: .25rem solid var(--text-color)
+}
+.clock .time {
+    font: 7rem/1 Inter;
+    letter-spacing: -.05em;
+    font-variation-settings: 'wght' 475
+}
+.clock .date {
+    font: 1.5rem/1 Inter;
+    letter-spacing: -.02em;
+    font-variation-settings: 'wght' 750
+}
+.weather,.wifi {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: var(--text-color);
+}
+
+.weather {
+    bottom: 1rem;
+    left: 1.5rem;
+    display: grid;
+    place-items: center;
+    grid-template-columns: 1fr auto; 
+    grid-template-rows: 1fr 1fr; 
+    grid-template-areas: 
+        "now ."
+        "now ."; 
+}
+.weather .now {
+    grid-area: now;
+    font: 3rem/1 Inter;
+    font-variation-settings: 'wght' 750;
+}
+.weather .sunrise,
+.weather .sunset {
+    display: flex;
+    align-items: center;
+    margin-left: .5rem;
+    font: 1.5rem/1 Inter;
+    font-variation-settings: 'wght' 550;
+}
+.weather .sunrise img,
+.weather .sunset img {
+    width: 2.5rem;
+}
+
+.wifi {
+    bottom: 1rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    font: 2rem/1 Inter;
+    font-variation-settings: 'wght' 750;
+}
+.wifi img {
+    height: 2rem;
+    margin: 0 .25rem 0 0;
+}
+
+.overlaid .overlays > * {
+    display: block;
+    opacity: 1;
+}
+
+.overlays > * {
+    position: absolute;
+    opacity: 0;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    top: 0;
+    left: 0;
+    backdrop-filter: blur(10px);
+    background-blend-mode: exclusion;
+    background: rgba(48,53,66,.65);
+    background-image: url(assets/noise.png);
+}
+.overlays button.close {
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: 0;
+    background-color: rgba(0,0,0,0.2);
+    background-image: url(assets/close.svg);
+    background-size: 70%;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 1.25rem;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+}
+
+.wifi-overlaid .wifi-overlay {
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    visibility: visible;
+    place-items: center;
+    opacity: 1;
+}
+.wifi-overlay > div {
+    background: white;
+    width: 25vw;
+    padding: .5rem;
+    font-size: 0;
+    border-radius: .5rem;
+}
+.wifi-overlay > div > div {
+    font: 1.5rem/1 Inter;
+    color: black;
+    font-variation-settings: 'wght' 800;
+    margin-bottom: .25rem;
+}
+.wifi-overlay > div > img {
+    width: 100%;
+}
