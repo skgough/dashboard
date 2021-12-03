@@ -1,7 +1,7 @@
 @import url('assets/fonts/fonts.css');
 body {
     user-select: none;
-    cursor: none;
+    /* cursor: none; */
     height: 100vh;
     width: 100vw;
     margin: 0;
@@ -47,7 +47,6 @@ body > * {
     bottom: 1rem;
     left: 1.5rem;
     display: grid;
-    place-items: center;
     grid-template-columns: 1fr auto; 
     grid-template-rows: 1fr 1fr; 
     grid-template-areas: 
@@ -56,6 +55,9 @@ body > * {
 }
 .weather .now {
     grid-area: now;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 .weather .now .temp {
     font: 3rem/1 Inter;
@@ -148,4 +150,38 @@ body > * {
 }
 .wifi-overlay > div > img {
     width: 100%;
+}
+
+.weather-overlaid .weather-overlay {
+    width: 100vw;
+    height: 100vh;
+    visibility: visible;
+    opacity: 1;
+}
+.weather-overlay .days button {
+    background: rgba(48,53,66,.65);
+    color: var(--text-color);
+}
+.weather-overlay .days button.selected {
+    background: blue
+}
+.weather-overlay .hours > div.day {
+    display: none;
+    margin-top: 3rem;
+    overflow-y: hidden;
+    overflow-x: auto;
+}
+.weather-overlay .hours > div.day.active {
+    display: flex;
+}
+.weather-overlay .hours > div.day > div.hour {
+    flex-basis: 10rem;
+    flex-grow: 0;
+    flex-shrink: 0;
+    margin: 0 1rem 0 0;
+    text-align: center;
+}
+.weather-overlay .hours .day .hour .temp {
+    font: 4rem/1 Inter;
+    font-variation-settings: 'wght' 800;
 }
