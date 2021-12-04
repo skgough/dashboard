@@ -110,10 +110,7 @@ body > * {
     height: 0;
     top: 0;
     left: 0;
-    backdrop-filter: blur(10px);
-    background-blend-mode: exclusion;
-    background: var(--overlay-bg);
-    background-image: url(assets/noise.png);
+    background-image: url(assets/overlay-bg.png);
 }
 .overlays button.close {
     width: 2.5rem;
