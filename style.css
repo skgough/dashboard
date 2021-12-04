@@ -1,22 +1,32 @@
 @import url('assets/fonts/fonts.css');
+::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+}
 body {
     user-select: none;
-    /* cursor: none; */
+    cursor: none;
     height: 100vh;
     width: 100vw;
     margin: 0;
     padding: 0;
+    background-image: url(assets/bg.jpg);
+    background-size: cover;
+    background-position: center;
     overflow: hidden;
-    background: darkslateblue;
     color: white;
     --text-color: white;
+    --overlay-bg: rgba(48,53,66,.65);
+}
+button {
+    cursor: none;
 }
 body > * {
     position: absolute;
 }
-/* * {
-    outline: 1px solid black;
-} */
+.clock,.weather,.wifi {
+    filter: drop-shadow(0 0 4px black)
+}
 
 .clock {
     top: 1rem;
@@ -92,12 +102,6 @@ body > * {
     height: 2rem;
     margin: 0 .25rem 0 0;
 }
-
-.overlaid .overlays > * {
-    display: block;
-    opacity: 1;
-}
-
 .overlays > * {
     position: absolute;
     opacity: 0;
@@ -108,7 +112,7 @@ body > * {
     left: 0;
     backdrop-filter: blur(10px);
     background-blend-mode: exclusion;
-    background: rgba(48,53,66,.65);
+    background: var(--overlay-bg);
     background-image: url(assets/noise.png);
 }
 .overlays button.close {
@@ -116,18 +120,32 @@ body > * {
     height: 2.5rem;
     padding: 0;
     border: 0;
-    background-color: rgba(0,0,0,0.2);
+    background-color: var(--overlay-bg);
     background-image: url(assets/close.svg);
     background-size: 70%;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 1.25rem;
     position: absolute;
-    top: 1rem;
-    right: 1.5rem;
+    top: .5rem;
+    right: 1rem;
 }
 
-.wifi-overlaid .wifi-overlay {
+.wifi-overlay {
+    transition: .3s opacity;
+}
+
+body.wifi-transition .wifi-overlay {
+    display: grid;
+    visibility: visible;
+    width: 100vw;
+    height: 100vh;
+    display: grid;
+    place-items: center;
+    opacity: 0;
+}
+
+body.wifi-overlaid .wifi-overlay {
     width: 100vw;
     height: 100vh;
     display: grid;
@@ -141,6 +159,11 @@ body > * {
     padding: .5rem;
     font-size: 0;
     border-radius: .5rem;
+    transform: translateY(0px);
+    transition: .2s transform;
+}
+.wifi-overlaid .wifi-overlay > div {
+    transform: translateY(10px)
 }
 .wifi-overlay > div > div {
     font: 1.5rem/1 Inter;
@@ -151,37 +174,154 @@ body > * {
 .wifi-overlay > div > img {
     width: 100%;
 }
-
+.weather-overlay {
+    transition: .3s opacity;
+}
+.weather-transition .weather-overlay {
+    width: 100vw;
+    height: 100vh;
+    visibility: visible;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+}
 .weather-overlaid .weather-overlay {
     width: 100vw;
     height: 100vh;
     visibility: visible;
     opacity: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.weather-overlay .transform-container {
+    transform: translateY(-10px);
+    flex-direction: column;
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    transition: .2s transform;
+}
+.weather-overlaid .weather-overlay .transform-container {
+    transform: translateY(0px);
+}
+
+.weather-overlay .now {
+    flex: 0 0 2.5rem;
+    display: flex;
+    width: min-content;
+    white-space: nowrap;
+    overflow-x:hidden;
+    align-items: center;
+    border-radius: 1.25rem;
+    margin: .5rem 4rem .5rem 1rem;
+    padding: 0 1rem;
+    background: var(--overlay-bg)
+}
+.weather-overlay .now > :not(:last-child) {
+    margin-right: .5ch;
+}
+.weather-overlay .days {
+    display: flex;
+    margin: 0 1rem;
+    justify-content: center;
 }
 .weather-overlay .days button {
-    background: rgba(48,53,66,.65);
+    position: relative;
+    transition: .2s flex-grow;
+    flex-grow: 0;
+    background: var(--overlay-bg);
     color: var(--text-color);
+    margin: 0 .25rem;
+    border: 0;
+    border-radius: .5rem;
+    padding: .5rem;
 }
 .weather-overlay .days button.selected {
-    background: blue
+    flex-grow: 1;
 }
-.weather-overlay .hours > div.day {
+.days > button > .temp-range {
+    display: flex;
+    margin: 0 auto;
+    justify-content: space-between;
+    font: .8rem/1 Inter;
+    border-radius: .65rem;
+    background: linear-gradient(90deg, #038 0%, #a02 100%);
+    width: 4rem;
+    font-variation-settings: 'wght' 450;
+    padding: .25rem;
+}
+
+.days > button > .name {
+    font: 1rem/1 Inter;
+    font-variation-settings: 'wght' 500;
+    letter-spacing: -.05ch;
+    transition: .2s font-variation-settings, .2s letter-spacing;
+}
+
+.days > button > .temp {
+    margin: .25rem 0;
+    font: 2rem/1 Inter;
+    font-variation-settings: 'wght' 600;
+}
+.weather-overlay .days button.selected .name {
+    font-variation-settings: 'wght' 800;
+    letter-spacing: 0;
+}
+.weather-overlay .days button.selected::after {
+   content: "";
+   position: absolute;
+   top: 100%;
+   left: calc(50% - .5rem);
+   border-top: .5rem solid black;
+   border-top-color: var(--overlay-bg); 
+   border-left: .5rem solid transparent;
+   border-right: .5rem solid transparent; 
+}
+.weather-overlay .hours {
+    margin: .5rem 1rem;
+    background: var(--overlay-bg);
+    flex-grow: 1;
+    border-radius: .5rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.weather-overlay .hours > .day {
     display: none;
-    margin-top: 3rem;
+}
+.weather-overlay .hours > .day.active {
+    display: block;
+}
+.weather-overlay .hours .date {
+    margin: .5rem 1rem;
+    font-variation-settings: 'wght' 550;
+    letter-spacing: -.05ch;
+}
+.weather-overlay .hours .forecast {
+    display: flex;
     overflow-y: hidden;
     overflow-x: auto;
 }
-.weather-overlay .hours > div.day.active {
-    display: flex;
-}
-.weather-overlay .hours > div.day > div.hour {
-    flex-basis: 10rem;
-    flex-grow: 0;
-    flex-shrink: 0;
-    margin: 0 1rem 0 0;
+.weather-overlay .hours .forecast .hour {
+    flex: 0 0 6rem;
+    margin: 0 .5rem;
     text-align: center;
 }
+
+.weather-overlay .hours .day .hour .time {
+    font: 1rem/1 Inter;
+    font-variation-settings: 'wght' 700;
+}
+
 .weather-overlay .hours .day .hour .temp {
-    font: 4rem/1 Inter;
+    font: 3rem/1.2 Inter;
     font-variation-settings: 'wght' 800;
+    position: relative;
+}
+
+.weather-overlay .hours .day .hour .description {
+    font: .8rem/1.2 Inter;
+}
+.weather-overlay .hours > .day canvas {
+    margin: 1rem 10px .25rem 10px;
 }
