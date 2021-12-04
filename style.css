@@ -294,8 +294,8 @@ body.wifi-overlaid .wifi-overlay {
 }
 .weather-overlay .hours .date {
     margin: .5rem 1rem;
-    font-variation-settings: 'wght' 550;
-    letter-spacing: -.05ch;
+    font-variation-settings: 'wght' 450;
+    letter-spacing: 0;
 }
 .weather-overlay .hours .forecast {
     display: flex;

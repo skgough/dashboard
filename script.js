@@ -96,7 +96,7 @@ async function getNOAAData(location) {
         hourlyForecast: (await getResource(response.properties.forecastHourly)).properties,
         raw: (await getResource(response.properties.forecastGridData)).properties,
         station: {
-            url: (await getResource(response.properties.observationStations)).observationStations[0],
+            url: (await getResource(response.properties.observationStations)).observationStations[1],
         }
     }
     linkedData.station.latest = await getResource(linkedData.station.url + '/observations/latest')
