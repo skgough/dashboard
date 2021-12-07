@@ -1,6 +1,6 @@
 'use strict'
 
-window.getlocation = {}
+window.geolocation = {}
 window.sunTimes = {}
 window.NOAAData = {}
 navigator.geolocation.getCurrentPosition(getNOAAData)
