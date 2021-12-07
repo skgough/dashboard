@@ -128,7 +128,57 @@ function updateDisplay(linkedData) {
     overlayTempDisplay.innerText = celToFahr(linkedData.station.latest.properties.temperature.value) + '°'
     overlayStatusDisplay.innerText = linkedData.station.latest.properties.textDescription
 
-
+    const tempsCanvas = document.createElement('canvas')
+    tempsCanvas.width = 748
+    tempsCanvas.height = 200
+    const tempsChart = new Chart(tempsCanvas, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [{
+                fill: false,
+                label: '',
+                pointBackgroundColor: '#2196f3',
+                pointBorderColor: '#2f3441',
+                pointRadius: 5,
+                borderColor: 'white',
+                borderWidth: 1,
+                tension: 0.5,
+                data: []
+            }],
+        },
+        options: {
+            responsive: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: 'white',
+                        autoSkip: true,
+                        maxTicksLimit: 8
+                    }
+                },
+                y: {
+                    ticks: {
+                        color: 'white',
+                        stepSize: 1,
+                        autoSkip: true,
+                        maxTicksLimit: 6,
+                        callback: function (value) {
+                            return + value + '°'
+                        }
+                    }
+                }
+            },
+            animation: {
+                duration: 0
+            }
+        }
+    })
 
     let date = new Date()
     for (let i = 0; i < 7; i++) {
@@ -156,13 +206,12 @@ function updateDisplay(linkedData) {
         dailyForecast.innerHTML = dailyForecastHTML
         if (i === 0 && !document.body.classList.contains('weather-overlaid')) dailyForecast.classList.add('selected')
 
-        let hourlyForecastHTML = ''
-        hourlyForecastHTML += `
+        let tempsList = []
+        let labelsList = []
+        let hourlyForecastHTML = `
             <h3 class='date'>${clock.date.text(date)}</h3>
             <div class='forecast'>
         `
-        tempsList = []
-        labelsList = []
         forecastSlice.forEach(period => {
             tempsList.push(period.temperature)
             labelsList.push(clock.time.text(new Date(period.startTime)))
@@ -175,67 +224,21 @@ function updateDisplay(linkedData) {
             `
         })
         hourlyForecastHTML += '</div>'
+
+        tempsChart.data.datasets[0].data = tempsList
+        tempsChart.data.labels = labelsList
+        tempsChart.update()
+        const chartImgSrc = tempsCanvas.toDataURL()
+        hourlyForecastHTML += `<img class='chart' src=${chartImgSrc}>`
+
         const hourlyForecast = document.querySelector(`.weather-overlay .hours > .day:nth-child(${i + 1})`)
         hourlyForecast.innerHTML = hourlyForecastHTML
 
-        const ctx = document.createElement('canvas')
-        ctx.width = 748
-        ctx.height = 200
-        hourlyForecast.appendChild(ctx)
-
-        const tempsChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: labelsList,
-                datasets: [{
-                    fill: false,
-                    label: '',
-                    pointBackgroundColor: '#2196f3',
-                    pointBorderColor: '#2f3441',
-                    pointRadius: 5,
-                    borderColor: 'white',
-                    borderWidth: 1,
-                    tension: 0.5,
-                    data: tempsList
-                }],
-            },
-            options: {
-                responsive: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    x: {
-                        ticks: {
-                            color: 'white',
-                            autoSkip: true,
-                            maxTicksLimit: 8
-                        }
-                    },
-                    y: {
-                        ticks: {
-                            color: 'white',
-                            stepSize: 1,
-                            autoSkip: true,
-                            maxTicksLimit: 6,
-                            callback: function (value, index, values) {
-                                return + value + '°'
-                            }
-                        }
-                    }
-                },
-                animation: {
-                    duration: 0
-                }
-            }
-        })
-
         if (i === 0 && !document.body.classList.contains('weather-overlaid')) hourlyForecast.classList.add('active')
-
         date.setDate(date.getDate() + 1)
     }
+    tempsChart.destroy()
+    tempsCanvas.remove()
 }
 function getDayOfYear(date) {
     const dayCount = [0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334]
