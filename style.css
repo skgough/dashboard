@@ -10,7 +10,7 @@ body {
     width: 100vw;
     margin: 0;
     padding: 0;
-    background-image: url(assets/bg.jpg);
+    background-image: url(assets/bg.png);
     background-size: cover;
     background-position: center;
     overflow: hidden;
@@ -319,6 +319,6 @@ body.wifi-overlaid .wifi-overlay {
 .weather-overlay .hours .day .hour .description {
     font: .8rem/1.2 Inter;
 }
-.weather-overlay .hours > .day canvas {
-    margin: 1rem 10px .25rem 10px;
+.weather-overlay .hours > .day img.chart {
+    margin: 1rem 10px 0 10px;
 }

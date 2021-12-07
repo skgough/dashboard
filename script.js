@@ -1,5 +1,6 @@
+'use strict'
 
-window.geolocation = {}
+window.getlocation = {}
 window.sunTimes = {}
 window.NOAAData = {}
 navigator.geolocation.getCurrentPosition(getNOAAData)
@@ -49,7 +50,7 @@ for (let i = 0; i < forecastDayButtons.length; i++) {
         forecastDayButtons[i].classList = 'selected'
         const days = document.querySelectorAll('.weather-overlay .hours .day')
         days.forEach(day => day.classList = 'day')
-        selectedDay = document.querySelector(`.weather-overlay .hours .day:nth-child(${i + 1})`)
+        const selectedDay = document.querySelector(`.weather-overlay .hours .day:nth-child(${i + 1})`)
         selectedDay.classList.add('active')
     })
 }
@@ -147,11 +148,29 @@ function updateDisplay(linkedData) {
                 data: []
             }],
         },
+        plugins: [ChartDataLabels],
         options: {
             responsive: false,
+            layout: {
+                padding: {
+                    top: 15,
+                    right: 10
+                }
+            },
             plugins: {
                 legend: {
                     display: false
+                },
+                datalabels: {
+                    color: 'white',
+                    anchor: 'end',
+                    align: 'top',
+                    display: function (context) {
+                        return context.dataIndex % 2
+                    },
+                    formatter: function (value) {
+                        return + value + '°'
+                    }
                 }
             },
             scales: {
