@@ -1,8 +1,6 @@
 'use strict'
 
 window.geolocation = {}
-window.sunTimes = {}
-window.NOAAData = {}
 navigator.geolocation.getCurrentPosition(getNOAAData)
 navigator.geolocation.getCurrentPosition(getSunTimes)
 setInterval(() => {
@@ -114,7 +112,6 @@ async function getNOAAData(location) {
         stationIndex++
         linkedData.station.latest = await getResource(linkedData.station.list[stationIndex] + '/observations/latest')
     }
-    
     updateDisplay(linkedData)
 }
 
@@ -153,7 +150,7 @@ function updateDisplay(linkedData) {
             responsive: false,
             layout: {
                 padding: {
-                    top: 15,
+                    top: 20,
                     right: 10
                 }
             },
@@ -166,7 +163,8 @@ function updateDisplay(linkedData) {
                     anchor: 'end',
                     align: 'top',
                     display: function (context) {
-                        return context.dataIndex % 2
+                        if (context.dataset.data.length > 3) return !(context.dataIndex % 2)
+                        else return true
                     },
                     formatter: function (value) {
                         return + value + '°'
@@ -183,13 +181,10 @@ function updateDisplay(linkedData) {
                 },
                 y: {
                     ticks: {
-                        color: 'white',
-                        stepSize: 1,
-                        autoSkip: true,
-                        maxTicksLimit: 6,
-                        callback: function (value) {
-                            return + value + '°'
-                        }
+                       display: false
+                    },
+                    grid: {
+                        display: false
                     }
                 }
             },
@@ -205,6 +200,28 @@ function updateDisplay(linkedData) {
         const forecastSlice = linkedData.hourlyForecast.periods.filter(
             period => getDayOfYear(new Date(period.startTime)) === getDayOfYear(date)
         )
+
+        const groupedConditions = []
+        for (let i = 0; i< forecastSlice.length; i++) {
+            if (i === 0) {
+                groupedConditions.push({
+                    condition: forecastSlice[i].shortForecast,
+                    periods: [forecastSlice[i]]
+                })
+            } else {
+                const previousGroup = groupedConditions[groupedConditions.length-1]
+                if (forecastSlice[i].shortForecast === previousGroup.condition) {
+                    previousGroup.periods.push(forecastSlice[i])
+                } else {
+                    groupedConditions.push({
+                        condition: forecastSlice[i].shortForecast,
+                        periods: [forecastSlice[i]],
+                    })
+                }
+            }
+        }
+        console.log(groupedConditions)
+        console.log(forecastSlice)
 
         let tempSum = 0
         forecastSlice.forEach(period => tempSum += period.temperature)
@@ -227,18 +244,25 @@ function updateDisplay(linkedData) {
 
         let tempsList = []
         let labelsList = []
-        let hourlyForecastHTML = `
-            <h3 class='date'>${clock.date.text(date)}</h3>
-            <div class='forecast'>
-        `
         forecastSlice.forEach(period => {
             tempsList.push(period.temperature)
             labelsList.push(clock.time.text(new Date(period.startTime)))
+        })
+
+        let hourlyForecastHTML = `
+            <h3 class='date'>${clock.date.text(date)}</h3>
+            <div class='forecast' data-end-time='${clock.time.text(new Date(forecastSlice[forecastSlice.length - 1].endTime))}'>
+        `
+        let sumPeriods = 0
+        groupedConditions.forEach(group => sumPeriods += group.periods.length)
+        let widthBasis = 752/sumPeriods
+
+        groupedConditions.forEach(group => {
             hourlyForecastHTML += `
-                <div class='hour' data-time='${period.startTime}'>
-                    <div class='time'>${clock.time.text(new Date(period.startTime))}</div>
-                    <div class='temp'>${period.temperature}°</div>
-                    <div class='description'>${period.shortForecast}</div>
+                <div class='group'
+                     data-start-time=${clock.time.text(new Date(group.periods[0].startTime))} 
+                     style='width: ${widthBasis*group.periods.length}px'>
+                    ${group.condition}
                 </div>
             `
         })
