@@ -96,11 +96,25 @@ async function getNOAAData(location) {
         hourlyForecast: (await getResource(response.properties.forecastHourly)).properties,
         raw: (await getResource(response.properties.forecastGridData)).properties,
         station: {
-            url: (await getResource(response.properties.observationStations)).observationStations[1],
+            url: (await getResource(response.properties.observationStations)).observationStations[0],
         }
     }
     linkedData.station.latest = await getResource(linkedData.station.url + '/observations/latest')
-    console.log(linkedData)
+    
+    /*
+        Oftentimes the stations won't have temperature data and instead return null so this is error handling for that.
+        if null, 
+        go to next url in the stations list, 
+        pull its data,
+        and test for emptiness again once the loop comes around
+    */
+    let stationIndex = 0
+    while(linkedData.station.latest.properties.temperature.value === null) {
+        stationIndex++
+        linkedData.station.url = (await getResource(response.properties.observationStations)).observationStations[stationIndex]
+        linkedData.station.latest = await getResource(linkedData.station.url + '/observations/latest')
+    }
+    
     updateDisplay(linkedData)
 }
 
