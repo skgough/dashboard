@@ -1,6 +1,7 @@
 @import url('assets/fonts/fonts.css');
 ::-webkit-scrollbar {
     width: 0;
+    height: 0;
     background: transparent;
 }
 body {
@@ -302,14 +303,9 @@ body.wifi-overlaid .wifi-overlay {
     display: flex;
     flex-grow: 1;
     align-items: center;
+    overflow-x: auto;
+    overflow-y: visible;
     margin: 0 .5rem;
-}
-.weather-overlay .hours .forecast::after {
-    content: attr(data-end-time);
-    position: absolute;
-    top: 0;
-    right: 0;
-    font: .6rem/1 Inter;
 }
 .weather-overlay .hours .forecast .group {
     box-sizing: border-box;
@@ -318,13 +314,13 @@ body.wifi-overlaid .wifi-overlay {
     justify-content: center;
     text-align: center;
     position: relative;
-    flex: 1 1 auto;
+    flex: 1 0 100px;
     height: 2.5em;
     padding: 0 .5rem;
     font: .8rem/1.1 Inter;
 }
 .weather-overlay .hours .forecast .group:not(:first-child) {
-    border-left: 2px solid var(--overlay-bg);
+    border-left: 1px solid var(--overlay-bg);
 }
 .weather-overlay .hours .forecast .group::before {
     content: attr(data-start-time);
@@ -335,6 +331,13 @@ body.wifi-overlaid .wifi-overlay {
 }
 .weather-overlay .hours .forecast .group:first-child::before {
     left: 0;
+}
+.weather-overlay .hours .forecast .group:last-child::after {
+    content: attr(data-end-time);
+    position: absolute;
+    top: -1.5em;
+    right: 0;
+    font: .6rem/1 Inter;
 }
 .weather-overlay .hours .day .hour .time {
     font: 1rem/1 Inter;

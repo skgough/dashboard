@@ -253,15 +253,13 @@ function updateDisplay(linkedData) {
             <h3 class='date'>${clock.date.text(date)}</h3>
             <div class='forecast' data-end-time='${clock.time.text(new Date(forecastSlice[forecastSlice.length - 1].endTime))}'>
         `
-        let sumPeriods = 0
-        groupedConditions.forEach(group => sumPeriods += group.periods.length)
-        let widthBasis = 752/sumPeriods
 
         groupedConditions.forEach(group => {
             hourlyForecastHTML += `
                 <div class='group'
-                     data-start-time=${clock.time.text(new Date(group.periods[0].startTime))} 
-                     style='width: ${widthBasis*group.periods.length}px'>
+                     data-start-time=${clock.time.text(new Date(group.periods[0].startTime))}
+                     data-end-time=${clock.time.text(new Date(group.periods[group.periods.length - 1].endTime))} 
+                     style='flex-grow: ${group.periods.length}'>
                     ${group.condition}
                 </div>
             `
