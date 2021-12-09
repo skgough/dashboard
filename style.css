@@ -294,18 +294,18 @@ body.wifi-overlaid .wifi-overlay {
     display: flex;
 }
 .weather-overlay .hours .date {
-    margin: .5rem 1rem 1rem 1rem;
+    margin: .5rem 1rem;
     font-variation-settings: 'wght' 450;
     letter-spacing: 0;
 }
 .weather-overlay .hours .forecast {
     position: relative;
     display: flex;
-    flex-grow: 1;
-    align-items: center;
+    flex: 1 0 auto;
     overflow-x: auto;
     overflow-y: visible;
     margin: 0 .5rem;
+    padding: 1rem 0 0 0;
 }
 .weather-overlay .hours .forecast .group {
     box-sizing: border-box;
@@ -314,8 +314,7 @@ body.wifi-overlaid .wifi-overlay {
     justify-content: center;
     text-align: center;
     position: relative;
-    flex: 1 0 100px;
-    height: 2.5em;
+    flex: 1 0 0;
     padding: 0 .5rem;
     font: .8rem/1.1 Inter;
 }
@@ -325,8 +324,10 @@ body.wifi-overlaid .wifi-overlay {
 .weather-overlay .hours .forecast .group::before {
     content: attr(data-start-time);
     position: absolute;
+    text-align: center;
+    left: -2.5ch;
     top: -1.5em;
-    left: -2ch;
+    width: 5ch;
     font: .6rem/1 Inter;
 }
 .weather-overlay .hours .forecast .group:first-child::before {
@@ -356,4 +357,6 @@ body.wifi-overlaid .wifi-overlay {
 .weather-overlay .hours > .day img.chart {
     margin: 0 10px;
     display: block;
+    width: 748px;
+    height: 200px;
 }

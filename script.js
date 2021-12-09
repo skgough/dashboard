@@ -113,6 +113,7 @@ async function getNOAAData(location) {
         linkedData.station.latest = await getResource(linkedData.station.list[stationIndex] + '/observations/latest')
     }
     updateDisplay(linkedData)
+    console.log(linkedData)
 }
 
 function updateDisplay(linkedData) {
@@ -129,70 +130,7 @@ function updateDisplay(linkedData) {
     const tempsCanvas = document.createElement('canvas')
     tempsCanvas.width = 748
     tempsCanvas.height = 200
-    const tempsChart = new Chart(tempsCanvas, {
-        type: 'line',
-        data: {
-            labels: [],
-            datasets: [{
-                fill: false,
-                label: '',
-                pointBackgroundColor: '#2196f3',
-                pointBorderColor: '#2f3441',
-                pointRadius: 5,
-                borderColor: 'white',
-                borderWidth: 1,
-                tension: 0.5,
-                data: []
-            }],
-        },
-        plugins: [ChartDataLabels],
-        options: {
-            responsive: false,
-            layout: {
-                padding: {
-                    top: 20,
-                    right: 10
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                },
-                datalabels: {
-                    color: 'white',
-                    anchor: 'end',
-                    align: 'top',
-                    display: function (context) {
-                        if (context.dataset.data.length > 3) return !(context.dataIndex % 2)
-                        else return true
-                    },
-                    formatter: function (value) {
-                        return + value + '°'
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    ticks: {
-                        color: 'white',
-                        autoSkip: true,
-                        maxTicksLimit: 8
-                    }
-                },
-                y: {
-                    ticks: {
-                       display: false
-                    },
-                    grid: {
-                        display: false
-                    }
-                }
-            },
-            animation: {
-                duration: 0
-            }
-        }
-    })
+    const tempsChart = new Chart(tempsCanvas, tempsChartConfig)
 
     let date = new Date()
     for (let i = 0; i < 7; i++) {
@@ -220,8 +158,6 @@ function updateDisplay(linkedData) {
                 }
             }
         }
-        console.log(groupedConditions)
-        console.log(forecastSlice)
 
         let tempSum = 0
         forecastSlice.forEach(period => tempSum += period.temperature)
@@ -251,15 +187,14 @@ function updateDisplay(linkedData) {
 
         let hourlyForecastHTML = `
             <h3 class='date'>${clock.date.text(date)}</h3>
-            <div class='forecast' data-end-time='${clock.time.text(new Date(forecastSlice[forecastSlice.length - 1].endTime))}'>
+            <div class='forecast'>
         `
-
         groupedConditions.forEach(group => {
             hourlyForecastHTML += `
                 <div class='group'
-                     data-start-time=${clock.time.text(new Date(group.periods[0].startTime))}
-                     data-end-time=${clock.time.text(new Date(group.periods[group.periods.length - 1].endTime))} 
-                     style='flex-grow: ${group.periods.length}'>
+                    data-start-time=${clock.time.text(new Date(group.periods[0].startTime))}
+                    data-end-time=${clock.time.text(new Date(group.periods[group.periods.length - 1].endTime))} 
+                    style='flex-grow: ${group.periods.length}'>
                     ${group.condition}
                 </div>
             `
