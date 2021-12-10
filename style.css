@@ -7,14 +7,16 @@
 body {
     user-select: none;
     cursor: none;
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
+    height: 480px;
+    width: 800px;
+    position: relative;
+    margin: 0 auto;
     padding: 0;
+    background-color: rgb(48,53,66);
     background-image: url(assets/bg.webp);
-    background-size: cover;
-    background-position: center;
-    overflow: hidden;
+    background-size: 800px 480px;
+    background-position: top center;
+    background-repeat: no-repeat;
     color: white;
     --text-color: white;
     --overlay-bg: rgba(48,53,66,.65);
@@ -112,6 +114,9 @@ body > * {
     top: 0;
     left: 0;
     background-image: url(assets/overlay-bg.png);
+    background-size: 800px 480px;
+    background-position: top center;
+    background-repeat: no-repeat;
 }
 .overlays button.close {
     width: 2.5rem;
@@ -136,16 +141,16 @@ body > * {
 body.wifi-transition .wifi-overlay {
     display: grid;
     visibility: visible;
-    width: 100vw;
-    height: 100vh;
+    width: 800px;
+    height: 480px;
     display: grid;
     place-items: center;
     opacity: 0;
 }
 
 body.wifi-overlaid .wifi-overlay {
-    width: 100vw;
-    height: 100vh;
+    width: 800px;
+    height: 480px;
     display: grid;
     visibility: visible;
     place-items: center;
@@ -153,7 +158,7 @@ body.wifi-overlaid .wifi-overlay {
 }
 .wifi-overlay > div {
     background: white;
-    width: 25vw;
+    width: 200px;
     padding: .5rem;
     font-size: 0;
     border-radius: .5rem;
@@ -176,16 +181,16 @@ body.wifi-overlaid .wifi-overlay {
     transition: .3s opacity;
 }
 .weather-transition .weather-overlay {
-    width: 100vw;
-    height: 100vh;
+    width: 800px;
+    height: 480px;
     visibility: visible;
     opacity: 0;
     display: flex;
     flex-direction: column;
 }
 .weather-overlaid .weather-overlay {
-    width: 100vw;
-    height: 100vh;
+    width: 800px;
+    height: 480px;
     visibility: visible;
     opacity: 1;
     display: flex;
@@ -196,8 +201,8 @@ body.wifi-overlaid .wifi-overlay {
     transform: translateY(-10px);
     flex-direction: column;
     display: flex;
-    width: 100vw;
-    height: 100vh;
+    width: 800px;
+    height: 480px;
     transition: .2s transform;
 }
 .weather-overlaid .weather-overlay .transform-container {
@@ -225,6 +230,7 @@ body.wifi-overlaid .wifi-overlay {
     justify-content: center;
 }
 .weather-overlay .days button {
+    display: none;
     position: relative;
     transition: .2s flex-grow;
     flex-grow: 0;
@@ -237,6 +243,9 @@ body.wifi-overlaid .wifi-overlay {
 }
 .weather-overlay .days button.selected {
     flex-grow: 1;
+}
+.weather-overlay .days button.populated {
+    display: block;
 }
 .days > button > .temp-range {
     display: flex;
@@ -289,6 +298,7 @@ body.wifi-overlaid .wifi-overlay {
     display: none;
     flex-direction: column;
     flex-grow: 1;
+    justify-content: space-between;
 }
 .weather-overlay .hours > .day.active {
     display: flex;
@@ -301,7 +311,7 @@ body.wifi-overlaid .wifi-overlay {
 .weather-overlay .hours .forecast {
     position: relative;
     display: flex;
-    flex: 1 0 auto;
+    flex: 0 0 auto;
     overflow-x: auto;
     overflow-y: visible;
     margin: 0 .5rem;

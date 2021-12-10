@@ -44,8 +44,8 @@ weatherButton.addEventListener('click', () => {
 const forecastDayButtons = document.querySelectorAll('.weather-overlay .days button')
 for (let i = 0; i < forecastDayButtons.length; i++) {
     forecastDayButtons[i].addEventListener('click', () => {
-        forecastDayButtons.forEach(button => button.classList = '')
-        forecastDayButtons[i].classList = 'selected'
+        forecastDayButtons.forEach(button => button.classList.remove('selected'))
+        forecastDayButtons[i].classList.add('selected')
         const days = document.querySelectorAll('.weather-overlay .hours .day')
         days.forEach(day => day.classList = 'day')
         const selectedDay = document.querySelector(`.weather-overlay .hours .day:nth-child(${i + 1})`)
@@ -132,12 +132,15 @@ function updateDisplay(linkedData) {
     tempsCanvas.height = 200
     const tempsChart = new Chart(tempsCanvas, tempsChartConfig)
 
+    document.querySelectorAll('.weather-overlay .days button').forEach(button => button.classList = '')
+
     let date = new Date()
     for (let i = 0; i < 7; i++) {
         const dayName = i ? new Intl.DateTimeFormat('en-US', { weekday: 'long' }).format(date) : 'Today'
         const forecastSlice = linkedData.hourlyForecast.periods.filter(
             period => getDayOfYear(new Date(period.startTime)) === getDayOfYear(date)
         )
+        if (forecastSlice.length < 1) break
 
         const groupedConditions = []
         for (let i = 0; i< forecastSlice.length; i++) {
@@ -177,6 +180,7 @@ function updateDisplay(linkedData) {
         const dailyForecast = document.querySelector(`.weather-overlay .days button:nth-child(${i + 1}`)
         dailyForecast.innerHTML = dailyForecastHTML
         if (i === 0 && !document.body.classList.contains('weather-overlaid')) dailyForecast.classList.add('selected')
+        dailyForecast.classList.add('populated')
 
         let tempsList = []
         let labelsList = []
