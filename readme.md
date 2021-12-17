@@ -1,4 +1,4 @@
-#dashboard
+# dashboard
 
 A little webpage that my raspberry pi home server displays. It shows weather and a QR code that you can use to sign into the WiFi.
 
