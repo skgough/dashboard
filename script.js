@@ -95,7 +95,6 @@ vibeGuider.addEventListener('touchstart', (e) => {
         vibeGuider.style = 'transform: scale(1)'
     }, 50)
     if (!video.playing) video.play()
-    BPMDisplay.innerText = Math.round(currentBPM)
     if (lastClick == 0) {
         lastClick = performance.now()
     } else {
@@ -104,6 +103,7 @@ vibeGuider.addEventListener('touchstart', (e) => {
         lastClick = currentClick
         if (timeInterval < 3000) {
             currentBPM = 1000/timeInterval * 60
+            BPMDisplay.innerText = Math.round(currentBPM)
             video.playbackRate = currentBPM/initialBPM
         }
     }
