@@ -1,5 +1,12 @@
 'use strict'
 
+Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
+    get: function(){
+        return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+    }
+})
+const video = document.querySelector('.vibe-overlay video')
+
 window.geolocation = {}
 navigator.geolocation.getCurrentPosition(getNOAAData)
 navigator.geolocation.getCurrentPosition(getSunTimes)
@@ -47,6 +54,7 @@ vibeButton.addEventListener('click', () => {
     setTimeout(() => {
         document.body.classList = 'vibing-overlaid'
     },100)
+    if (lastClick != 0) video.play()
 })
 const forecastDayButtons = document.querySelectorAll('.weather-overlay .days button')
 for (let i = 0; i < forecastDayButtons.length; i++) {
@@ -76,14 +84,9 @@ weatherCloser.addEventListener('click', () => {
     }, 100)
 })
 
-Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
-    get: function(){
-        return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
-    }
-})
+
 
 const vibeGuider = document.querySelector('.vibe-overlay .controls button')
-const video = document.querySelector('.vibe-overlay video')
 const BPMDisplay = document.querySelector('.vibe-overlay .controls span')
 const initialBPM = 120
 let currentBPM = initialBPM
