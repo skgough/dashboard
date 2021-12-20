@@ -41,6 +41,13 @@ weatherButton.addEventListener('click', () => {
         document.body.classList = 'weather-overlaid'
     },100)
 })
+const vibeButton = document.querySelector('button.vibe') 
+vibeButton.addEventListener('click', () => {
+    document.body.classList = 'vibe-transition'
+    setTimeout(() => {
+        document.body.classList = 'vibing-overlaid'
+    },100)
+})
 const forecastDayButtons = document.querySelectorAll('.weather-overlay .days button')
 for (let i = 0; i < forecastDayButtons.length; i++) {
     forecastDayButtons[i].addEventListener('click', () => {
@@ -68,6 +75,16 @@ weatherCloser.addEventListener('click', () => {
         document.body.classList = ''
     }, 100)
 })
+
+const vibeCloser = document.querySelector('.vibe-overlay button.close')
+vibeCloser.addEventListener('click', () => {
+    document.body.classList = 'vibe-transition'
+    setTimeout(() => {
+        document.body.classList = ''
+        ceaseVibing()
+    },100)
+})
+
 
 async function getSunTimes(location) {
     if (!window.geolocation.latitude) {
@@ -242,4 +259,7 @@ function parseIsoDatetime(dateString) {
 }
 function celToFahr(celsius) {
     return Math.round((celsius * 1.8) + 32)
+}
+function ceaseVibing() {
+
 }

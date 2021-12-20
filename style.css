@@ -27,7 +27,7 @@ button {
 body > * {
     position: absolute;
 }
-.clock,.weather,.wifi {
+.clock,.weather,.wifi, .vibe {
     filter: drop-shadow(0 0 4px black)
 }
 
@@ -48,7 +48,7 @@ body > * {
     letter-spacing: -.02em;
     font-variation-settings: 'wght' 750
 }
-.weather,.wifi {
+.weather,.wifi,.vibe {
     appearance: none;
     background: transparent;
     border: 0;
@@ -105,6 +105,18 @@ body > * {
     height: 2rem;
     margin: 0 .25rem 0 0;
 }
+.vibe {
+    top: 1rem;
+    right: 1.5rem;
+    display: flex;
+    align-items: center;
+    font: 2rem/1 Inter;
+    font-variation-settings: 'wght' 750;
+}
+.vibe img {
+    height: 2rem;
+    margin: 0 .25rem 0 0;
+}
 .overlays > * {
     position: absolute;
     opacity: 0;
@@ -123,9 +135,8 @@ body > * {
     height: 2.5rem;
     padding: 0;
     border: 0;
-    background-color: var(--overlay-bg);
-    background-image: url(assets/close.svg);
-    background-size: 70%;
+    background-image: url(assets/close.png);
+    background-size: 100%;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 1.25rem;
@@ -134,8 +145,65 @@ body > * {
     right: 1rem;
 }
 
-.wifi-overlay {
+.wifi-overlay,
+.vibe-overlay {
     transition: .3s opacity;
+}
+body.vibing-transition .vibe-overlay {
+    visibility: visible;
+    width: 800px;
+    height: 480px;
+    opacity: 0;
+    display: block;
+}
+body.vibing-overlaid .vibe-overlay {
+    opacity: 1;
+    width: 800px;
+    height: 480px;
+    display: block;
+    visibility: visible;
+}
+.vibe-overlay {
+    background-image: url(assets/bg.webp);
+}
+.vibe-overlay .controls {
+    position: absolute;
+    width: 400px;
+    height: 480px;
+    top: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.controls button {
+    font: 3rem/1.25 Inter;
+    font-variation-settings: 'wght' 800;
+    color: white;
+    width: 200px;
+    background-image: url(assets/guide-bg.png);
+    padding: 1rem 1.5rem;
+    border-radius: 1rem;
+    border: 0;
+}
+.controls button:active {
+    transform: scale(.9);
+}
+.controls .indicator {
+    box-sizing: border-box;
+    text-align: center;
+    border-radius: .5rem;
+    font: 1rem/1.5 Inter;
+    font-variation-settings: 'wght' 500;
+    width:140px;
+    margin-top: 1rem;
+    padding: 1rem 0;
+    background: url(assets/indicator-bg.png)
+}
+.controls .indicator span {
+    font: 1.5rem/1 Inter;
+    font-variation-settings: 'wght' 700;
 }
 
 body.wifi-transition .wifi-overlay {
