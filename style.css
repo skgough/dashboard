@@ -166,6 +166,10 @@ body.vibing-overlaid .vibe-overlay {
 .vibe-overlay {
     background-image: url(assets/bg.webp);
 }
+.vibe-overlay video {
+    width: 800px;
+    height: 480px;
+}
 .vibe-overlay .controls {
     position: absolute;
     width: 400px;
@@ -179,17 +183,16 @@ body.vibing-overlaid .vibe-overlay {
 }
 .controls button {
     font: 3rem/1.25 Inter;
-    font-variation-settings: 'wght' 800;
+    font-variation-settings: 'wght' 900, 'slnt' -10;
     color: white;
     width: 200px;
     background-image: url(assets/guide-bg.png);
     padding: 1rem 1.5rem;
     border-radius: 1rem;
     border: 0;
+    transition: transform .025s;
 }
-.controls button:active {
-    transform: scale(.9);
-}
+
 .controls .indicator {
     box-sizing: border-box;
     text-align: center;

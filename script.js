@@ -76,6 +76,39 @@ weatherCloser.addEventListener('click', () => {
     }, 100)
 })
 
+Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
+    get: function(){
+        return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
+    }
+})
+
+const vibeGuider = document.querySelector('.vibe-overlay .controls button')
+const video = document.querySelector('.vibe-overlay video')
+const BPMDisplay = document.querySelector('.vibe-overlay .controls span')
+const initialBPM = 120
+let currentBPM = initialBPM
+let lastClick = 0
+vibeGuider.addEventListener('touchstart', (e) => {
+    e.preventDefault()
+    vibeGuider.style = 'transform: scale(.9)'
+    setTimeout(() => {
+        vibeGuider.style = 'transform: scale(1)'
+    }, 50)
+    if (!video.playing) video.play()
+    BPMDisplay.innerText = Math.round(currentBPM)
+    if (lastClick == 0) {
+        lastClick = performance.now()
+    } else {
+        const currentClick = performance.now()
+        const timeInterval = currentClick - lastClick
+        lastClick = currentClick
+        if (timeInterval < 3000) {
+            currentBPM = 1000/timeInterval * 60
+            video.playbackRate = currentBPM/initialBPM
+        }
+    }
+})
+
 const vibeCloser = document.querySelector('.vibe-overlay button.close')
 vibeCloser.addEventListener('click', () => {
     document.body.classList = 'vibe-transition'
@@ -84,7 +117,10 @@ vibeCloser.addEventListener('click', () => {
         ceaseVibing()
     },100)
 })
-
+function ceaseVibing() {
+    video.pause()
+    video.currentTime = 0
+}
 
 async function getSunTimes(location) {
     if (!window.geolocation.latitude) {
@@ -130,7 +166,6 @@ async function getNOAAData(location) {
         linkedData.station.latest = await getResource(linkedData.station.list[stationIndex] + '/observations/latest')
     }
     updateDisplay(linkedData)
-    console.log(linkedData)
 }
 
 function updateDisplay(linkedData) {
@@ -259,7 +294,4 @@ function parseIsoDatetime(dateString) {
 }
 function celToFahr(celsius) {
     return Math.round((celsius * 1.8) + 32)
-}
-function ceaseVibing() {
-
 }
