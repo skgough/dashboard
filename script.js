@@ -84,32 +84,33 @@ weatherCloser.addEventListener('click', () => {
     }, 100)
 })
 
-
-
 const vibeGuider = document.querySelector('.vibe-overlay .controls button')
 const BPMDisplay = document.querySelector('.vibe-overlay .controls span')
 const initialBPM = 120
-let currentBPM = initialBPM
+let BPMList = [initialBPM]
 let lastClick = 0
 vibeGuider.addEventListener('touchstart', (e) => {
     e.preventDefault()
-    vibeGuider.style = 'transform: scale(.9)'
-    setTimeout(() => {
-        vibeGuider.style = 'transform: scale(1)'
-    }, 50)
-    if (!video.playing) video.play()
     if (lastClick == 0) {
         lastClick = performance.now()
+        BPMDisplay.innerText = 120
     } else {
         const currentClick = performance.now()
         const timeInterval = currentClick - lastClick
         lastClick = currentClick
         if (timeInterval < 3000) {
-            currentBPM = 1000/timeInterval * 60
-            BPMDisplay.innerText = Math.round(currentBPM)
-            video.playbackRate = currentBPM/initialBPM
+            if (BPMList.length >= 10) BPMList.shift()
+            BPMList.push(1000/timeInterval * 60)
+            const avgBPM =  avg(BPMList)
+            BPMDisplay.innerText = (avgBPM < 300) ? Math.round(avgBPM) : '???'
+            video.playbackRate = avgBPM/initialBPM
         }
     }
+    if (!video.playing) video.play()
+    vibeGuider.style = 'transform: scale(.9)'
+    setTimeout(() => {
+        vibeGuider.style = 'transform: scale(1)'
+    }, 50)
 })
 
 const vibeCloser = document.querySelector('.vibe-overlay button.close')
@@ -297,4 +298,7 @@ function parseIsoDatetime(dateString) {
 }
 function celToFahr(celsius) {
     return Math.round((celsius * 1.8) + 32)
+}
+function avg(array) {
+    return array.reduce((a, b) => a + b) / array.length
 }
