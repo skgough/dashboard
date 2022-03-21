@@ -240,6 +240,7 @@ body.wifi-overlaid .wifi-overlay {
     transform: translateY(10px)
 }
 .wifi-overlay > div > div {
+    text-align: center;
     font: 1.5rem/1 Inter;
     color: black;
     font-variation-settings: 'wght' 800;
@@ -369,75 +370,20 @@ body.wifi-overlaid .wifi-overlay {
     display: none;
     flex-direction: column;
     flex-grow: 1;
-    justify-content: space-between;
+    justify-content: flex-start;
+    overflow: hidden;
 }
 .weather-overlay .hours > .day.active {
     display: flex;
 }
 .weather-overlay .hours .date {
-    margin: .5rem 1rem;
+    margin: 8px 1rem;
     font-variation-settings: 'wght' 450;
-    letter-spacing: 0;
 }
-.weather-overlay .hours .forecast {
-    position: relative;
-    display: flex;
-    flex: 0 0 auto;
-    overflow-x: auto;
-    overflow-y: visible;
-    margin: 0 .5rem;
-    padding: 1rem 0 0 0;
+.weather-overlay .hours h4 {
+    margin: 0 1rem;
+    font-variation-settings: 'wght' 350;
 }
-.weather-overlay .hours .forecast .group {
-    box-sizing: border-box;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    position: relative;
-    flex: 1 0 0;
-    padding: 0 .5rem;
-    font: .8rem/1.1 Inter;
-}
-.weather-overlay .hours .forecast .group:not(:first-child) {
-    border-left: 1px solid var(--overlay-bg);
-}
-.weather-overlay .hours .forecast .group::before {
-    content: attr(data-start-time);
-    position: absolute;
-    text-align: center;
-    left: -2.5ch;
-    top: -1.5em;
-    width: 5ch;
-    font: .6rem/1 Inter;
-}
-.weather-overlay .hours .forecast .group:first-child::before {
-    left: 0;
-}
-.weather-overlay .hours .forecast .group:last-child::after {
-    content: attr(data-end-time);
-    position: absolute;
-    top: -1.5em;
-    right: 0;
-    font: .6rem/1 Inter;
-}
-.weather-overlay .hours .day .hour .time {
-    font: 1rem/1 Inter;
-    font-variation-settings: 'wght' 700;
-}
-
-.weather-overlay .hours .day .hour .temp {
-    font: 3rem/1.2 Inter;
-    font-variation-settings: 'wght' 800;
-    position: relative;
-}
-
-.weather-overlay .hours .day .hour .description {
-    font: .8rem/1.2 Inter;
-}
-.weather-overlay .hours > .day img.chart {
-    margin: 0 10px;
-    display: block;
-    width: 748px;
-    height: 200px;
+.weather-overlay .hours h4.precip-chart {
+    margin-top: auto;
 }

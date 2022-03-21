@@ -39,21 +39,21 @@ wifiButton.addEventListener('click', () => {
     document.body.classList = 'wifi-transition'
     setTimeout(() => {
         document.body.classList = 'wifi-overlaid'
-    },100)
+    })
 })
 const weatherButton = document.querySelector('button.weather')
 weatherButton.addEventListener('click', () => {
     document.body.classList = 'weather-transition'
     setTimeout(() => {
         document.body.classList = 'weather-overlaid'
-    },100)
+    })
 })
 const vibeButton = document.querySelector('button.vibe') 
 vibeButton.addEventListener('click', () => {
     document.body.classList = 'vibe-transition'
     setTimeout(() => {
         document.body.classList = 'vibing-overlaid'
-    },100)
+    })
     if (lastClick != 0) video.play()
 })
 const forecastDayButtons = document.querySelectorAll('.weather-overlay .days button')
@@ -93,7 +93,7 @@ vibeGuider.addEventListener('touchstart', (e) => {
     e.preventDefault()
     if (lastClick == 0) {
         lastClick = performance.now()
-        BPMDisplay.innerText = 120
+        BPMDisplay.innerText = '120'
     } else {
         const currentClick = performance.now()
         const timeInterval = currentClick - lastClick
@@ -156,7 +156,6 @@ async function getNOAAData(location) {
         }
     }
     linkedData.station.latest = await getResource(linkedData.station.list[0] + '/observations/latest')
-    
     /*
         Oftentimes the stations won't have temperature data and instead return null so this is error handling for that.
         if null, 
@@ -165,7 +164,8 @@ async function getNOAAData(location) {
         and test for emptiness again once the loop comes around
     */
     let stationIndex = 0
-    while(linkedData.station.latest.properties.temperature.value === null) {
+    let test = forecastCompleteTest(linkedData)
+    while(!test) {
         stationIndex++
         linkedData.station.latest = await getResource(linkedData.station.list[stationIndex] + '/observations/latest')
     }
@@ -185,8 +185,13 @@ function updateDisplay(linkedData) {
 
     const tempsCanvas = document.createElement('canvas')
     tempsCanvas.width = 748
-    tempsCanvas.height = 200
+    tempsCanvas.height = 125
     const tempsChart = new Chart(tempsCanvas, tempsChartConfig)
+
+    const precipCanvas = document.createElement('canvas')
+    precipCanvas.width = 748
+    precipCanvas.height = 75
+    const precipChart = new Chart(precipCanvas, precipChanceChartConfig)
 
     document.querySelectorAll('.weather-overlay .days button').forEach(button => button.classList = '')
 
@@ -198,77 +203,56 @@ function updateDisplay(linkedData) {
         )
         if (forecastSlice.length < 1) break
 
-        const groupedConditions = []
-        for (let i = 0; i< forecastSlice.length; i++) {
-            if (i === 0) {
-                groupedConditions.push({
-                    condition: forecastSlice[i].shortForecast,
-                    periods: [forecastSlice[i]]
-                })
-            } else {
-                const previousGroup = groupedConditions[groupedConditions.length-1]
-                if (forecastSlice[i].shortForecast === previousGroup.condition) {
-                    previousGroup.periods.push(forecastSlice[i])
-                } else {
-                    groupedConditions.push({
-                        condition: forecastSlice[i].shortForecast,
-                        periods: [forecastSlice[i]],
-                    })
-                }
-            }
-        }
-
         let tempSum = 0
         forecastSlice.forEach(period => tempSum += period.temperature)
         const avgTemp = Math.round(tempSum / forecastSlice.length)
         const minTemp = Math.min.apply(Math, forecastSlice.map(function (period) { return period.temperature }))
         const maxTemp = Math.max.apply(Math, forecastSlice.map(function (period) { return period.temperature }))
 
-        let dailyForecastHTML = ''
-        dailyForecastHTML += `
-            <div class='name'>${dayName}</div>
-            <div class='temp'>${avgTemp}°</div>
-            <div class='temp-range'>
-                <div class='min'>${minTemp}°</div>
-                <div class='max'>${maxTemp}°</div>
-            </div>
-        `
         const dailyForecast = document.querySelector(`.weather-overlay .days button:nth-child(${i + 1}`)
-        dailyForecast.innerHTML = dailyForecastHTML
+        dailyForecast.querySelector('.name').innerText = dayName
+        dailyForecast.querySelector('.temp').innerText = `${avgTemp}°`
+        dailyForecast.querySelector('.temp-range .min').innerText = `${minTemp}°`
+        dailyForecast.querySelector('.temp-range .max').innerText = `${maxTemp}°`
+
         if (i === 0 && !document.body.classList.contains('weather-overlaid')) dailyForecast.classList.add('selected')
         dailyForecast.classList.add('populated')
 
         let tempsList = []
-        let labelsList = []
+        let tempTimesList = []
         forecastSlice.forEach(period => {
             tempsList.push(period.temperature)
-            labelsList.push(clock.time.text(new Date(period.startTime)))
+            tempTimesList.push(clock.time.text(new Date(period.startTime)))
         })
-
-        let hourlyForecastHTML = `
-            <h3 class='date'>${clock.date.text(date)}</h3>
-            <div class='forecast'>
-        `
-        groupedConditions.forEach(group => {
-            hourlyForecastHTML += `
-                <div class='group'
-                    data-start-time=${clock.time.text(new Date(group.periods[0].startTime))}
-                    data-end-time=${clock.time.text(new Date(group.periods[group.periods.length - 1].endTime))} 
-                    style='flex-grow: ${group.periods.length}'>
-                    ${group.condition}
-                </div>
-            `
-        })
-        hourlyForecastHTML += '</div>'
 
         tempsChart.data.datasets[0].data = tempsList
-        tempsChart.data.labels = labelsList
+        tempsChart.data.labels = tempTimesList
         tempsChart.update()
-        const chartImgSrc = tempsCanvas.toDataURL()
-        hourlyForecastHTML += `<img class='chart' src=${chartImgSrc}>`
+        const tempsChartSrc = tempsCanvas.toDataURL()
+
+        const precipSlice = linkedData.raw.probabilityOfPrecipitation.values.filter(
+            period => getDayOfYear(new Date(period.validTime.split('/')[0])) === getDayOfYear(date)
+        )
+        let precipList = []
+        let precipTimesList = []
+        precipSlice.forEach(period => {
+            precipList.push(period.value)
+            precipTimesList.push(clock.time.text(new Date(period.validTime.split('/')[0])))
+        })
+        if (precipList.length === 1) {
+            precipList.push(precipList[0])
+            precipTimesList.push('23:00')
+        }
+
+        precipChart.data.datasets[0].data = precipList
+        precipChart.data.labels = precipTimesList
+        precipChart.update()
+        const precipChartSrc = precipCanvas.toDataURL()
 
         const hourlyForecast = document.querySelector(`.weather-overlay .hours > .day:nth-child(${i + 1})`)
-        hourlyForecast.innerHTML = hourlyForecastHTML
+        hourlyForecast.querySelector('h3').innerText = clock.date.text(date)
+        hourlyForecast.querySelector('img.temps-chart').src = tempsChartSrc
+        hourlyForecast.querySelector('img.precip-chart').src = precipChartSrc
 
         if (i === 0 && !document.body.classList.contains('weather-overlaid')) hourlyForecast.classList.add('active')
         date.setDate(date.getDate() + 1)
@@ -301,4 +285,23 @@ function celToFahr(celsius) {
 }
 function avg(array) {
     return array.reduce((a, b) => a + b) / array.length
+}
+
+/* 
+    Test that there are seven days of data in the NOAA API response:
+    For each day from today to seven days in the future, group hourly forecast by days.
+    If the grouping returns a zero-length list, that means there are less than 
+    seven days in the API response. Return false. If all test pass, the loop 
+    ends, and the function returns true.
+*/
+function forecastCompleteTest(linkedData) {
+    let date = new Date()
+    for (let i = 0; i < 7; i++) {
+        const forecastSlice = linkedData.hourlyForecast.periods.filter(
+            period => getDayOfYear(new Date(period.startTime)) === getDayOfYear(date)
+        )
+        if (forecastSlice.length < 1) return false
+        date.setDate(date.getDate() + 1)
+    }
+    return true
 }
