@@ -7,9 +7,10 @@ Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
 })
 const video = document.querySelector('.vibe-overlay video')
 
-window.geolocation = {}
-navigator.geolocation.getCurrentPosition(getNOAAData)
-navigator.geolocation.getCurrentPosition(getSunTimes)
+const latitude = 34.7361;
+const longitude = -86.6976;
+getNOAAData();
+getSunTimes();
 setInterval(() => {
     getNOAAData()
     getSunTimes()
@@ -21,7 +22,12 @@ const clock = {
         element: document.querySelector('.clock .date')
     },
     time: {
-        text: (date) => { return date.getHours() + ':' + (date.getMinutes().toString().length === 1 ? '0' + date.getMinutes() : date.getMinutes()) },
+        text: (date) => { 
+            return `${date.getHours()}:${(date.getMinutes().toString().length === 1 
+                ? `0${date.getMinutes()}` 
+                : date.getMinutes()) 
+            }`
+        },
         element: document.querySelector('.clock .time')
     }
 }
@@ -40,14 +46,6 @@ weatherButton.addEventListener('click', () => {
     setTimeout(() => {
         document.body.classList = 'weather-overlaid'
     })
-})
-const vibeButton = document.querySelector('button.vibe') 
-vibeButton.addEventListener('click', () => {
-    document.body.classList = 'vibe-transition'
-    setTimeout(() => {
-        document.body.classList = 'vibing-overlaid'
-    })
-    if (lastClick != 0) video.play()
 })
 const forecastDayButtons = document.querySelectorAll('.weather-overlay .days button')
 for (let i = 0; i < forecastDayButtons.length; i++) {
@@ -69,54 +67,8 @@ weatherCloser.addEventListener('click', () => {
     }, 100)
 })
 
-const vibeGuider = document.querySelector('.vibe-overlay .controls button')
-const BPMDisplay = document.querySelector('.vibe-overlay .controls span')
-const initialBPM = 120
-let BPMList = [initialBPM]
-let lastClick = 0
-vibeGuider.addEventListener('touchstart', (e) => {
-    e.preventDefault()
-    if (lastClick == 0) {
-        lastClick = performance.now()
-        BPMDisplay.innerText = '120'
-    } else {
-        const currentClick = performance.now()
-        const timeInterval = currentClick - lastClick
-        lastClick = currentClick
-        if (timeInterval < 3000) {
-            if (BPMList.length >= 10) BPMList.shift()
-            BPMList.push(1000/timeInterval * 60)
-            const avgBPM =  avg(BPMList)
-            BPMDisplay.innerText = (avgBPM < 300) ? Math.round(avgBPM) : '???'
-            video.playbackRate = avgBPM/initialBPM
-        }
-    }
-    if (!video.playing) video.play()
-    vibeGuider.style = 'transform: scale(.9)'
-    setTimeout(() => {
-        vibeGuider.style = 'transform: scale(1)'
-    }, 50)
-})
-
-const vibeCloser = document.querySelector('.vibe-overlay button.close')
-vibeCloser.addEventListener('click', () => {
-    document.body.classList = 'vibe-transition'
-    setTimeout(() => {
-        document.body.classList = ''
-        ceaseVibing()
-    },100)
-})
-function ceaseVibing() {
-    video.pause()
-    video.currentTime = 0
-}
-
-async function getSunTimes(location) {
-    if (!window.geolocation.latitude) {
-        window.geolocation.latitude = location.coords.latitude
-        window.geolocation.longitude = location.coords.longitude
-    }
-    const response = await getResource(`https://api.sunrise-sunset.org/json?lat=${window.geolocation.latitude.toFixed(4)}&lng=${window.geolocation.longitude.toFixed(4)}&formatted=0`)
+async function getSunTimes() {
+    const response = await getResource(`https://api.sunrise-sunset.org/json?lat=${latitude.toFixed(4)}&lng=${longitude.toFixed(4)}&formatted=0`)
     const sunTimes = {
         sunrise: clock.time.text(parseIsoDatetime(response.results.sunrise)),
         sunset: clock.time.text(parseIsoDatetime(response.results.sunset))
@@ -128,11 +80,7 @@ async function getSunTimes(location) {
     sunsetDisplay.innerText = sunTimes.sunset
 }
 async function getNOAAData(location) {
-    if (!window.geolocation.latitude) {
-        window.geolocation.latitude = location.coords.latitude
-        window.geolocation.longitude = location.coords.longitude
-    }
-    const response = await getResource(`https://api.weather.gov/points/${window.geolocation.latitude.toFixed(4)},${window.geolocation.longitude.toFixed(4)}`)
+    const response = await getResource(`https://api.weather.gov/points/${latitude.toFixed(4)},${longitude.toFixed(4)}`)
     const linkedData = {
         hourlyForecast: (await getResource(response.properties.forecastHourly)).properties,
         raw: (await getResource(response.properties.forecastGridData)).properties,
@@ -267,9 +215,6 @@ function parseIsoDatetime(dateString) {
 }
 function celToFahr(celsius) {
     return Math.round((celsius * 1.8) + 32)
-}
-function avg(array) {
-    return array.reduce((a, b) => a + b) / array.length
 }
 
 /* 

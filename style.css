@@ -49,7 +49,7 @@ body > * {
     letter-spacing: -.02em;
     font-variation-settings: 'wght' 750
 }
-.weather,.vibe {
+.weather {
     appearance: none;
     background: transparent;
     border: 0;
@@ -93,18 +93,6 @@ body > * {
 .weather .sunset img {
     width: 2.5rem;
 }
-.vibe {
-    top: 1rem;
-    right: 1.5rem;
-    display: flex;
-    align-items: center;
-    font: 2rem/1 Inter;
-    font-variation-settings: 'wght' 750;
-}
-.vibe img {
-    height: 2rem;
-    margin: 0 .25rem 0 0;
-}
 .overlays > * {
     position: absolute;
     opacity: 0;
@@ -136,65 +124,6 @@ body > * {
 .wifi-overlay,
 .vibe-overlay {
     transition: .3s opacity;
-}
-body.vibing-transition .vibe-overlay {
-    visibility: visible;
-    width: 800px;
-    height: 480px;
-    opacity: 0;
-    display: block;
-}
-body.vibing-overlaid .vibe-overlay {
-    opacity: 1;
-    width: 800px;
-    height: 480px;
-    display: block;
-    visibility: visible;
-}
-.vibe-overlay {
-    background-image: url(assets/bg.webp);
-}
-.vibe-overlay video {
-    width: 800px;
-    height: 480px;
-}
-.vibe-overlay .controls {
-    position: absolute;
-    width: 400px;
-    height: 480px;
-    top: 0;
-    right: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-.controls button {
-    font: 3rem/1.25 Inter;
-    font-variation-settings: 'wght' 900, 'slnt' -10;
-    color: white;
-    width: 200px;
-    background-image: url(assets/guide-bg.png);
-    padding: 1rem 1.5rem;
-    border-radius: 1rem;
-    border: 0;
-    transition: transform .025s;
-}
-
-.controls .indicator {
-    box-sizing: border-box;
-    text-align: center;
-    border-radius: .5rem;
-    font: 1rem/1.5 Inter;
-    font-variation-settings: 'wght' 500;
-    width:140px;
-    margin-top: 1rem;
-    padding: 1rem 0;
-    background: url(assets/indicator-bg.png)
-}
-.controls .indicator span {
-    font: 1.5rem/1 Inter;
-    font-variation-settings: 'wght' 700;
 }
 .weather-overlay {
     transition: .3s opacity;
