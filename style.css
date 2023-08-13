@@ -6,14 +6,15 @@
 }
 body {
     user-select: none;
-    cursor: none;
+    overflow: hidden;
+    /*cursor: none;*/
     height: 480px;
     width: 800px;
     position: relative;
     margin: 0 auto;
     padding: 0;
     background-color: rgb(48,53,66);
-    background-image: url(assets/bg.webp);
+    background-image: url(assets/bg.jpg);
     background-size: 800px 480px;
     background-position: top center;
     background-repeat: no-repeat;
@@ -22,7 +23,7 @@ body {
     --overlay-bg: rgba(48,53,66,.65);
 }
 button {
-    cursor: none;
+    /*cursor: none;*/
 }
 body > * {
     position: absolute;
@@ -48,7 +49,7 @@ body > * {
     letter-spacing: -.02em;
     font-variation-settings: 'wght' 750
 }
-.weather,.wifi,.vibe {
+.weather,.vibe {
     appearance: none;
     background: transparent;
     border: 0;
@@ -91,19 +92,6 @@ body > * {
 .weather .sunrise img,
 .weather .sunset img {
     width: 2.5rem;
-}
-
-.wifi {
-    bottom: 1rem;
-    right: 1.5rem;
-    display: flex;
-    align-items: center;
-    font: 2rem/1 Inter;
-    font-variation-settings: 'wght' 750;
-}
-.wifi img {
-    height: 2rem;
-    margin: 0 .25rem 0 0;
 }
 .vibe {
     top: 1rem;
@@ -207,47 +195,6 @@ body.vibing-overlaid .vibe-overlay {
 .controls .indicator span {
     font: 1.5rem/1 Inter;
     font-variation-settings: 'wght' 700;
-}
-
-body.wifi-transition .wifi-overlay {
-    display: grid;
-    visibility: visible;
-    width: 800px;
-    height: 480px;
-    display: grid;
-    place-items: center;
-    opacity: 0;
-}
-
-body.wifi-overlaid .wifi-overlay {
-    width: 800px;
-    height: 480px;
-    display: grid;
-    visibility: visible;
-    place-items: center;
-    opacity: 1;
-}
-.wifi-overlay > div {
-    background: white;
-    width: 200px;
-    padding: .5rem;
-    font-size: 0;
-    border-radius: .5rem;
-    transform: translateY(0px);
-    transition: .2s transform;
-}
-.wifi-overlaid .wifi-overlay > div {
-    transform: translateY(10px)
-}
-.wifi-overlay > div > div {
-    text-align: center;
-    font: 1.5rem/1 Inter;
-    color: black;
-    font-variation-settings: 'wght' 800;
-    margin-bottom: .25rem;
-}
-.wifi-overlay > div > img {
-    width: 100%;
 }
 .weather-overlay {
     transition: .3s opacity;

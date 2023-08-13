@@ -34,13 +34,6 @@ setInterval(() => {
     clock.time.element.innerText = clock.time.text(now)
 }, 1000)
 
-const wifiButton = document.querySelector('button.wifi')
-wifiButton.addEventListener('click', () => {
-    document.body.classList = 'wifi-transition'
-    setTimeout(() => {
-        document.body.classList = 'wifi-overlaid'
-    })
-})
 const weatherButton = document.querySelector('button.weather')
 weatherButton.addEventListener('click', () => {
     document.body.classList = 'weather-transition'
@@ -67,14 +60,6 @@ for (let i = 0; i < forecastDayButtons.length; i++) {
         selectedDay.classList.add('active')
     })
 }
-
-const wifiCloser = document.querySelector('.wifi-overlay button.close')
-wifiCloser.addEventListener('click', () => {
-    document.body.classList = 'wifi-transition'
-    setTimeout(() => {
-        document.body.classList = ''
-    },100)
-})
 
 const weatherCloser = document.querySelector('.weather-overlay button.close')
 weatherCloser.addEventListener('click', () => {
@@ -143,6 +128,7 @@ async function getSunTimes(location) {
     sunsetDisplay.innerText = sunTimes.sunset
 }
 async function getNOAAData(location) {
+    console.log('here')
     if (!window.geolocation.latitude) {
         window.geolocation.latitude = location.coords.latitude
         window.geolocation.longitude = location.coords.longitude
