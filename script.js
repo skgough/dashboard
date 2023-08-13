@@ -128,7 +128,6 @@ async function getSunTimes(location) {
     sunsetDisplay.innerText = sunTimes.sunset
 }
 async function getNOAAData(location) {
-    console.log('here')
     if (!window.geolocation.latitude) {
         window.geolocation.latitude = location.coords.latitude
         window.geolocation.longitude = location.coords.longitude
