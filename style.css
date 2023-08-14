@@ -214,6 +214,7 @@ body > * {
     font-weight: 700;
     padding: 0;
 }
+.source-qr-overlaid .source-qr-overlay .transform-container,
 .page-qr-overlaid .page-qr-overlay .transform-container,
 .about-overlaid .about-overlay .transform-container,
 .weather-overlaid .weather-overlay .transform-container {
