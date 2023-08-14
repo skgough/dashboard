@@ -28,7 +28,7 @@ button {
 body > * {
     position: absolute;
 }
-.clock,.weather,.wifi, .vibe {
+.clock, .weather, .about {
     filter: drop-shadow(0 0 4px black)
 }
 
@@ -93,6 +93,29 @@ body > * {
 .weather .sunset img {
     width: 2.5rem;
 }
+.about {
+    display: flex;
+    gap: .75rem;
+    align-items: center;
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    color: var(--text-color);
+    bottom: 1rem;
+    right: 1.5rem;
+    font: 1.5rem/1 Inter;
+    font-variation-settings: 'wght' 700;
+}
+.about .icon {
+    font-size: 2rem;
+    animation: spin  10s linear 1s infinite;
+}
+@keyframes spin {
+      0% { rotate: 0deg   }
+    100% { rotate: 360deg }
+}
+
 .overlays > * {
     position: absolute;
     opacity: 0;
@@ -121,13 +144,15 @@ body > * {
     right: 1rem;
 }
 
-.wifi-overlay,
-.vibe-overlay {
-    transition: .3s opacity;
-}
+.source-qr-overlay,
+.page-qr-overlay,
+.about-overlay,
 .weather-overlay {
     transition: .3s opacity;
 }
+.source-qr-transition .source-qr-overlay,
+.page-qr-transition .page-qr-overlay,
+.about-transition .about-overlay,
 .weather-transition .weather-overlay {
     width: 800px;
     height: 480px;
@@ -136,6 +161,9 @@ body > * {
     display: flex;
     flex-direction: column;
 }
+.source-qr-overlaid .source-qr-overlay,
+.page-qr-overlaid .page-qr-overlay,
+.about-overlaid .about-overlay,
 .weather-overlaid .weather-overlay {
     width: 800px;
     height: 480px;
@@ -145,6 +173,9 @@ body > * {
     flex-direction: column;
 }
 
+.source-qr-overlay .transform-container,
+.page-qr-overlay .transform-container,
+.about-overlay .transform-container,
 .weather-overlay .transform-container {
     transform: translateY(-10px);
     flex-direction: column;
@@ -153,8 +184,67 @@ body > * {
     height: 480px;
     transition: .2s transform;
 }
+.source-qr-overlay .transform-container,
+.page-qr-overlay .transform-container,
+.about-overlay .transform-container {
+    align-items: center;
+    justify-content: center;
+}
+.about-overlay article {
+    background: var(--overlay-bg);
+    padding: .75rem 1rem;
+    border-radius: 1rem;
+    max-width: 40ch;
+    transform: translateY(-10vh);
+}
+.about-overlay article header {
+    font-size: 1.5rem;
+    font-variation-settings: 'wght' 700;
+    
+}
+.about-overlay article p {
+    margin: 0;
+}
+.about-overlay article .fakelink {
+    appearance: none;
+    font-size: 1rem;
+    background:transparent;
+    border: 0;
+    color: rgb(109, 189, 255);
+    font-weight: 700;
+    padding: 0;
+}
+.page-qr-overlaid .page-qr-overlay .transform-container,
+.about-overlaid .about-overlay .transform-container,
 .weather-overlaid .weather-overlay .transform-container {
     transform: translateY(0px);
+}
+
+.page-qr-overlay figure,
+.source-qr-overlay figure {
+    margin: 0;
+    color: black;
+    display: flex;
+    overflow: hidden;
+    border-radius: 1rem;
+    flex-direction: column;
+    width: min-content;
+    font-weight: bold;
+    align-items: center;
+    background-color: white;
+}
+.page-qr-overlay figcaption,
+.source-qr-overlay figcaption {
+    padding: .75rem .5rem .25rem .5rem;
+    font-size: 1.25rem;
+    line-height: 1.25rem;
+    text-align: center;
+}
+
+.page-qr-overlay img,
+.source-qr-overlay img {
+    image-rendering: pixelated;
+    width:250px;
 }
 
 .weather-overlay .now {

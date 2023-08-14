@@ -1,5 +1,7 @@
 'use strict'
 
+addEventListener('contextmenu', e => e.preventDefault())
+
 Object.defineProperty(HTMLMediaElement.prototype, 'playing', {
     get: function(){
         return !!(this.currentTime > 0 && !this.paused && !this.ended && this.readyState > 2);
@@ -40,12 +42,26 @@ setInterval(() => {
     clock.time.element.innerText = clock.time.text(now)
 }, 1000)
 
+const aboutButton = document.querySelector('button.about')
+aboutButton.addEventListener('click', () => {
+    document.body.classList = 'about-overlaid'
+})
+const pageQRButton = document.querySelector('button.fakelink.page')
+pageQRButton.addEventListener('click', async () => {
+    document.body.classList = 'about-transition'
+    await sleep(100)
+    document.body.classList = 'page-qr-overlaid'
+})
+const sourceQRButton = document.querySelector('button.fakelink.source')
+sourceQRButton.addEventListener('click', async () => {
+    document.body.classList = 'about-transition'
+    await sleep(100)
+    document.body.classList = 'source-qr-overlaid'
+})
+
 const weatherButton = document.querySelector('button.weather')
 weatherButton.addEventListener('click', () => {
-    document.body.classList = 'weather-transition'
-    setTimeout(() => {
-        document.body.classList = 'weather-overlaid'
-    })
+    document.body.classList = 'weather-overlaid'    
 })
 const forecastDayButtons = document.querySelectorAll('.weather-overlay .days button')
 for (let i = 0; i < forecastDayButtons.length; i++) {
@@ -59,12 +75,29 @@ for (let i = 0; i < forecastDayButtons.length; i++) {
     })
 }
 
+const aboutCloser = document.querySelector('.about-overlay button.close')
+aboutCloser.addEventListener('click', async () => {
+    document.body.classList = 'about-transition'
+    await sleep(100)
+    document.body.classList = ''
+})
+const pageQRCloser = document.querySelector('.page-qr-overlay button.close')
+pageQRCloser.addEventListener('click', async () => {
+    document.body.classList = 'page-qr-transition'
+    await sleep(100)
+    document.body.classList = 'about-overlaid'
+})
+const sourceQRCloser = document.querySelector('.source-qr-overlay button.close')
+sourceQRCloser.addEventListener('click', async () => {
+    document.body.classList = 'source-qr-transition'
+    await sleep(100)
+    document.body.classList = 'about-overlaid'
+})
 const weatherCloser = document.querySelector('.weather-overlay button.close')
-weatherCloser.addEventListener('click', () => {
+weatherCloser.addEventListener('click', async () => {
     document.body.classList = 'weather-transition'
-    setTimeout(() => {
-        document.body.classList = ''
-    }, 100)
+    await sleep(100)
+    document.body.classList = ''
 })
 
 async function getSunTimes() {
@@ -215,6 +248,10 @@ function parseIsoDatetime(dateString) {
 }
 function celToFahr(celsius) {
     return Math.round((celsius * 1.8) + 32)
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 /* 

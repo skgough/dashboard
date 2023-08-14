@@ -12,11 +12,15 @@
     <script defer src="script.js"></script>
 </head>
 
-<body>
+<body class="about-overlaid">
     <div class='clock'>
         <div class='time'></div>
         <div class='date'></div>
     </div>
+    <button class="about">
+        <span class="icon">?</span>
+        <span>About</span>
+    </button>
     <button class='weather'>
         <div class='now'>
             <div class='temp'></div>
@@ -148,6 +152,35 @@
                         <img class='precip-chart'>
                     </div>
                 </div>
+            </div>
+            <button class='close'></button>
+        </div>
+        <div class='about-overlay'>
+            <div class='transform-container'>
+                <article>
+                    <header>About</header>
+                    <p>This is a Raspberry Pi running a browser opened to <button
+                            class="fakelink page">https://skgough.github.io/dashboard</button>. Source code for the website is on the <button
+                            class="fakelink source">GitHub</button>. </p>
+                </article>
+            </div>
+            <button class='close'></button>
+        </div>
+        <div class='page-qr-overlay'>
+            <div class='transform-container'>
+                <figure>
+                    <figcaption>https://<wbr>skgough.github.io/<wbr>dashboard</figcaption>
+                    <img src="assets/page-qr.png"/>
+                </figure>
+            </div>
+            <button class='close'></button>
+        </div>
+        <div class='source-qr-overlay'>
+            <div class='transform-container'>
+                <figure>
+                    <figcaption>https://<wbr>github.com/<wbr>skgough/<wbr>dashboard</figcaption>
+                    <img src="assets/source-qr.png"/>
+                </figure>
             </div>
             <button class='close'></button>
         </div>
