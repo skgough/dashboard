@@ -7,7 +7,6 @@
 body {
     user-select: none;
     overflow: hidden;
-    cursor: none;
     height: 480px;
     width: 800px;
     position: relative;
@@ -23,7 +22,7 @@ body {
     --overlay-bg: rgba(48,53,66,.65);
 }
 button {
-    cursor: none;
+    cursor: pointer;
 }
 body > * {
     position: absolute;
